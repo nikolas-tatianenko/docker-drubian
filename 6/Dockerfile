@@ -42,5 +42,3 @@ EXPOSE 80
 
 USER $USERNAME
 WORKDIR /docker
-
-CMD ["sudo", "/etc/init.d/apache2", "start"]
