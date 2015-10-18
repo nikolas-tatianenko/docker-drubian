@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+
+  ServerAdmin webmaster@flashbit.net
+  ServerName drupal.dev
+  ServerAlias m.drupal.dev www.drupal.dev
+
+  DirectoryIndex index.html index.php
+  DocumentRoot /usr/share/drupal6
+
+  <IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Redirect all to www subdomain
+    RewriteCond %{HTTP_HOST} !^www\.drupal\.dev$ [NC]
+    RewriteRule ^(.*)$ http://www.drupal.dev/$1 [R=301,L]
+  </IfModule>
+
+  # Custom log file locations
+  LogLevel warn
+
+</VirtualHost>
