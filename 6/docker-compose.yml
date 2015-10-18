@@ -1,6 +1,6 @@
 web:
   build: .
-  command: "/etc/init.d/apache2 start"
+  working_dir: /docker
   volumes:
     - .:/docker
     - ~/.ssh:/home/deploy/.ssh
@@ -16,7 +16,5 @@ mysql:
   expose:
     - "3306"
   environment:
-    MYSQL_ROOT_PASSWORD: ""
     MYSQL_ALLOW_EMPTY_PASSWORD: yes
     MYSQL_DATABASE: drupal6
-    MYSQL_USER: root
