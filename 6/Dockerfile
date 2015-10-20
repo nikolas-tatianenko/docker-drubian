@@ -37,7 +37,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y drupal6 drush
 RUN adduser --disabled-password --gecos '' $USERNAME
 RUN mkdir -p $HOME/.ssh
 RUN touch $HOME/.ssh/known_hosts
-RUN usermod -a -G sudo $USERNAME
+RUN usermod -a -G www-data,sudo $USERNAME
 RUN echo "%$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN echo "ServerName $APACHE_SERVERNAME" >> /etc/apache2/apache2.conf
@@ -49,6 +49,13 @@ RUN a2enmod rewrite \
   && a2dissite 000-default \
   && a2ensite drupal.dev \
   && /etc/init.d/apache2 stop
+
+RUN mkdir -p /var/www/drupal.dev/{modules,files,themes} \
+  && mkdir -p /usr/share/drupal6/sites/drupal.dev \
+  && cd /usr/share/drupal6/sites/drupal.dev \
+  && ln -s /var/www/drupal.dev/modules modules \
+  && ln -s /var/www/drupal.dev/files files \
+  && ln -s /var/www/drupal.dev/themes themes
 
 EXPOSE 80
 
