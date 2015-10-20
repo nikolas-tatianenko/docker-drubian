@@ -34,11 +34,13 @@ ADD config/dbconfig-common/drupal6.conf /etc/dbconfig-common/drupal6.conf
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y drupal6 drush
 
-RUN adduser -m --disabled-password --gecos '' -G sudo -s bash $USERNAME
+RUN adduser --disabled-password --gecos '' $USERNAME
 RUN mkdir -p $HOME/.ssh
 RUN touch $HOME/.ssh/known_hosts
-#RUN usermod -a -G sudo $USERNAME
+RUN usermod -a -G sudo $USERNAME
+RUN echo "%$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+RUN echo "ServerName $APACHE_SERVERNAME" >> /etc/apache2/apache2.conf
 RUN echo 'sudo service apache2 start' >> /etc/bash.bashrc \
   && /etc/init.d/apache2 start
 COPY config/apache/sites-available/drupal.dev /etc/apache2/sites-available/
@@ -51,6 +53,6 @@ RUN a2enmod rewrite \
 EXPOSE 80
 
 USER $USERNAME
-WORKDIR /home/$USERNAME
+WORKDIR "$HOME"
 
 CMD ["apache2-foreground"]
