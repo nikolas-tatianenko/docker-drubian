@@ -43,23 +43,25 @@ RUN echo "%$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN echo "ServerName $APACHE_SERVERNAME" >> /etc/apache2/apache2.conf
 RUN echo 'sudo service apache2 start' >> /etc/bash.bashrc \
   && /etc/init.d/apache2 start
-COPY config/apache/sites-available/drupal.dev /etc/apache2/sites-available/
+COPY "config/apache/sites-available/$APACHE_SERVERNAME" "/etc/apache2/sites-available/"
 COPY config/apache/apache2-foreground /usr/local/bin/
 RUN a2enmod rewrite \
   && a2dissite 000-default \
-  && a2ensite drupal.dev \
+  && a2ensite "$APACHE_SERVERNAME" \
   && /etc/init.d/apache2 stop
 
-RUN mkdir -p /var/www/drupal.dev/{modules,files,themes} \
-  && mkdir -p /usr/share/drupal6/sites/drupal.dev \
-  && cd /usr/share/drupal6/sites/drupal.dev \
-  && ln -s /var/www/drupal.dev/modules modules \
-  && ln -s /var/www/drupal.dev/files files \
-  && ln -s /var/www/drupal.dev/themes themes
+RUN mkdir -p "/var/www/$APACHE_SERVERNAME/modules" \
+  && mkdir -p "/var/www/$APACHE_SERVERNAME/themes" \
+  && mkdir -p "/var/www/$APACHE_SERVERNAME/files" \
+  && mkdir -p "/usr/share/drupal6/sites/$APACHE_SERVERNAME" \
+  && cd "/usr/share/drupal6/sites/$APACHE_SERVERNAME" \
+  && ln -s "/var/www/$APACHE_SERVERNAME/modules" "modules" \
+  && ln -s "/var/www/$APACHE_SERVERNAME/files" "files" \
+  && ln -s "/var/www/$APACHE_SERVERNAME/themes" "themes"
 
 EXPOSE 80
 
-USER $USERNAME
+USER "$USERNAME"
 WORKDIR "$HOME"
 
 CMD ["apache2-foreground"]
