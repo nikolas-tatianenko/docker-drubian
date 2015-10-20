@@ -37,7 +37,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y drupal6 drush
 RUN adduser --disabled-password --gecos '' $USERNAME
 RUN mkdir -p $HOME/.ssh
 RUN touch $HOME/.ssh/known_hosts
-RUN usermod -a -G www-data,sudo $USERNAME
+RUN usermod -a -G sudo $USERNAME
+# FIXME: add user to www-data group
 RUN echo "%$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN echo "ServerName $APACHE_SERVERNAME" >> /etc/apache2/apache2.conf
@@ -59,9 +60,12 @@ RUN mkdir -p "/var/www/$APACHE_SERVERNAME/modules" \
   && ln -s "/var/www/$APACHE_SERVERNAME/files" "files" \
   && ln -s "/var/www/$APACHE_SERVERNAME/themes" "themes"
 
+RUN chown :www-data -R "/var/www/$APACHE_SERVERNAME" \
+  && chmod g+w -R "/var/www/$APACHE_SERVERNAME"
+
 EXPOSE 80
 
 USER "$USERNAME"
-WORKDIR "$HOME"
+WORKDIR "/var/www/$APACHE_SERVERNAME"
 
 CMD ["apache2-foreground"]
