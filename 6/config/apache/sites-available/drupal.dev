@@ -7,7 +7,10 @@
   DirectoryIndex index.html index.php
   DocumentRoot /usr/share/drupal6
 
-  # Custom log file locations
+  <IfModule mod_rewrite.c>
+    RewriteEngine On
+  </IfModule>
+
   LogLevel warn
 
 </VirtualHost>
