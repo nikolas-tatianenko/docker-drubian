@@ -1,5 +1,5 @@
 web:
-  build: .
+  image: aintohvri/docker-drubian:6
   working_dir: /var/www/drupal.dev
   volumes:
     - .:/docker
