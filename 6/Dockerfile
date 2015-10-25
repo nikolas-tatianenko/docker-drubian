@@ -60,11 +60,11 @@ RUN mkdir -p "/var/www/$APACHE_SERVERNAME/modules" \
   && ln -s "/var/www/$APACHE_SERVERNAME/files" "files" \
   && ln -s "/var/www/$APACHE_SERVERNAME/themes" "themes"
 
-COPY config/drupal/ "/usr/share/drupal6/sites/$APACHE_SERVERNAME/"
+COPY "config/drupal/*.php" "/etc/drupal/6/sites/$APACHE_SERVERNAME/"
 
 RUN chown :www-data -R "/var/www/$APACHE_SERVERNAME" \
-  && chown :www-data "/etc/drupal/6/sites/$APACHE_SERVERNAME/*.php" \
-  && chmod +r "/etc/drupal/6/sites/$APACHE_SERVERNAME/*.php" \
+  && chown :www-data "/etc/drupal/6/sites/$APACHE_SERVERNAME/"*.php \
+  && chmod +r "/etc/drupal/6/sites/$APACHE_SERVERNAME/"*.php \
   && chmod g+w -R "/var/www/$APACHE_SERVERNAME"
 
 EXPOSE 80
