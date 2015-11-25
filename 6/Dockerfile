@@ -37,7 +37,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y drupal6 drush
 RUN adduser --disabled-password --gecos '' $USERNAME
 RUN mkdir -p $HOME/.ssh
 RUN touch $HOME/.ssh/known_hosts
-RUN usermod -a -G sudo $USERNAME
+RUN usermod -a -G sudo,www-data $USERNAME
 # FIXME: add user to www-data group
 RUN echo "%$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
