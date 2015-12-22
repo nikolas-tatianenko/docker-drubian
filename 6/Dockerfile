@@ -27,7 +27,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   apache2 \
   php5 \
   libapache2-mod-php5 \
-  sudo
+  sudo \
+  php5-curl
 
 # Necessary to fall through Drupal installation.
 ADD config/dbconfig-common/drupal6.conf /etc/dbconfig-common/drupal6.conf
